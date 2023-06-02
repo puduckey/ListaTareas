@@ -25,7 +25,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/baloo_tamma_2"
             android:text="Bienvenido/a username"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textSize="20sp" />
 
         <Space
             android:layout_width="match_parent"

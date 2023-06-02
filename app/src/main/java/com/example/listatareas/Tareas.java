@@ -3,11 +3,16 @@ package com.example.listatareas;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -29,6 +34,8 @@ public class Tareas extends AppCompatActivity {
     TextView tv_bienvenida;
     Button btn_agregarTarea;
     ListView lv_listaTareas;
+
+    ArrayList<Tarea> lista;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,23 +60,39 @@ public class Tareas extends AppCompatActivity {
         });
     }
 
-    private void cargarLista(){
+    private void cargarLista() {
         cargarListaTareas(new OnListaCargadaListener() {
             @Override
-            public void onListaCargada(ArrayList<String> lista) {
-                ArrayList<String> arrTareas = new ArrayList<String>();
-                arrTareas = lista;
-                ArrayAdapter adapter = new ArrayAdapter(Tareas.this, android.R.layout.simple_list_item_1, arrTareas);
+            public void onListaCargada(ArrayList<Tarea> lista) {
+                if (lista != null) {
+                    ArrayList<String> arrTareas = new ArrayList<String>();
+                    for (Tarea tarea : lista) {
+                        arrTareas.add(tarea.getTitulo());
+                    }
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(Tareas.this, android.R.layout.simple_list_item_1, arrTareas);
 
-                lv_listaTareas.setAdapter(adapter);
+                    lv_listaTareas.setAdapter(adapter);
+                    lv_listaTareas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Tarea tarea = lista.get(position);
+                            String idTarea = tarea.getId();
+
+                            Intent intent = new Intent(Tareas.this, VerTarea.class);
+                            intent.putExtra("idTarea", idTarea);
+                            startActivity(intent);
+                        }
+                    });
+                } else {
+                    Toast.makeText(Tareas.this, "Hubo un error al obtener las tareas", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
-
     }
 
+
     private void cargarListaTareas(final OnListaCargadaListener listener){
-        ArrayList<String> lista = new ArrayList<>();
+        lista = new ArrayList<>();
 
         db.collection("usuarios")
                 .document(Usuario.username)
@@ -81,13 +104,14 @@ public class Tareas extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()){
                             for (QueryDocumentSnapshot document : task.getResult()){
-                                String line = document.getString("titulo");
-                                lista.add(line);
-                                listener.onListaCargada(lista);
+                                String id = document.getId();
+                                String titulo = document.getString("titulo");
+                                Tarea tarea = new Tarea(id, titulo);
+                                lista.add(tarea);
                             }
-
-                        }else{
-                            Toast.makeText(Tareas.this,"Hubo un error al obtener las tareas", Toast.LENGTH_SHORT).show();
+                            listener.onListaCargada(lista);
+                        } else {
+                            Toast.makeText(Tareas.this, "Hubo un error al obtener las tareas", Toast.LENGTH_SHORT).show();
                             listener.onListaCargada(null);
                         }
                     }
@@ -95,7 +119,7 @@ public class Tareas extends AppCompatActivity {
     }
 
     public interface OnListaCargadaListener {
-        void onListaCargada(ArrayList<String> lista);
+        void onListaCargada(ArrayList<Tarea> lista);
     }
 
     private ActivityResultLauncher<Intent> launcher = registerForActivityResult(

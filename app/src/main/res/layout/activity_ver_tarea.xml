@@ -50,7 +50,7 @@
             android:inputType="textMultiLine" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/btn_actualizar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Actualizar"
@@ -58,7 +58,7 @@
             app:iconGravity="textStart" />
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/btn_realizar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Tarea realizada"
