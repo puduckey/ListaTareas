@@ -23,12 +23,14 @@
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/baloo_tamma_2"
             android:text="Tu tarea" />
 
         <TextView
             android:id="@+id/tv_creacion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/baloo_tamma_2"
             android:text="Tarea creada el 29 de marzo del 2023 a las 23:45" />
 
         <EditText
@@ -36,6 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:fontFamily="@font/baloo_tamma_2"
             android:hint="Titulo de la tarea"
             android:inputType="textPersonName"
             android:minHeight="48dp" />
@@ -45,6 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="125dp"
             android:ems="10"
+            android:fontFamily="@font/baloo_tamma_2"
             android:gravity="start|top"
             android:hint="Descripcion de la tarea"
             android:inputType="textMultiLine" />

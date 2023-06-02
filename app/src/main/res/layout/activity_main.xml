@@ -24,12 +24,14 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/baloo_tamma_2"
             android:text="Bienvenido" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/baloo_tamma_2"
             android:text="Porfavor, ingrese sus datos" />
 
         <EditText
@@ -37,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:fontFamily="@font/baloo_tamma_2"
             android:hint="Nombre de usuario"
             android:inputType="textPersonName|text"
             android:minHeight="48dp"
@@ -47,6 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:fontFamily="@font/baloo_tamma_2"
             android:hint="Contraseña"
             android:inputType="textPassword"
             android:minHeight="48dp" />
