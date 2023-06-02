@@ -5,17 +5,26 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public class VerTarea extends AppCompatActivity {
 
@@ -51,7 +60,7 @@ public class VerTarea extends AppCompatActivity {
                         if (task.isSuccessful()){
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()){
-                                tv_creacion.setText("Tarea creada el " +
+                                tv_creacion.setText("Última modificación: " +
                                                 document.getString("creacion_fecha") +
                                                 " a las " +
                                                 document.getString("creacion_hora")
@@ -65,5 +74,73 @@ public class VerTarea extends AppCompatActivity {
                         }
                     }
                 });
+
+        btn_actualizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Object> actualizacion = new HashMap<>();
+                actualizacion.put("titulo", et_titulo.getText().toString());
+                actualizacion.put("descripcion", et_descripcion.getText().toString());
+
+                // Obtener el dia formateado
+                Calendar calendario = Calendar.getInstance();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd 'de' MMMM 'del' yyyy", new Locale("es"));
+                String fechaFormateada = dateFormat.format(calendario.getTime());
+
+                // Obtener la hora formateada
+                SimpleDateFormat formato = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                String horaFormateada = formato.format(new Date());
+
+                actualizacion.put("creacion_fecha", fechaFormateada);
+                actualizacion.put("creacion_hora", horaFormateada);
+
+                db.collection("usuarios")
+                        .document(Usuario.username)
+                        .collection("tareas")
+                        .document(idTarea)
+                        .update(actualizacion)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(VerTarea.this, "Tarea actualizada", Toast.LENGTH_SHORT).show();
+                                Intent resultIntent = new Intent();
+                                setResult(RESULT_OK, resultIntent);
+                                finish();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(VerTarea.this, "Hubo un error al actualizar la tarea", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
+        });
+
+        btn_realizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Object> actualizacion = new HashMap<>();
+                actualizacion.put("estado", "realizada");
+                db.collection("usuarios")
+                        .document(Usuario.username)
+                        .collection("tareas")
+                        .document(idTarea)
+                        .update(actualizacion)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(VerTarea.this, "Tarea realizada", Toast.LENGTH_SHORT).show();
+                                Intent resultIntent = new Intent();
+                                setResult(RESULT_OK, resultIntent);
+                                finish();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(VerTarea.this, "Hubo un error al actualizar la tarea", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
+        });
     }
 }

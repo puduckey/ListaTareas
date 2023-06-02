@@ -80,7 +80,7 @@ public class Tareas extends AppCompatActivity {
 
                             Intent intent = new Intent(Tareas.this, VerTarea.class);
                             intent.putExtra("idTarea", idTarea);
-                            startActivity(intent);
+                            launcher.launch(intent);
                         }
                     });
                 } else {
