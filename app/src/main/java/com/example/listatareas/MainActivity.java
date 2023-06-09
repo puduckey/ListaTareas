@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseFirestore db;
 
     EditText et_username, et_password;
-    Button btn_login;
+    Button btn_login, btn_crearunacuenta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         et_username = (EditText) findViewById(R.id.et_username);
         et_password = (EditText) findViewById(R.id.et_password);
         btn_login = (Button) findViewById(R.id.btn_iniciarSesion);
+        btn_crearunacuenta = (Button) findViewById(R.id.btn_crearunacuenta);
 
         db = FirebaseFirestore.getInstance();
 
@@ -73,8 +74,13 @@ public class MainActivity extends AppCompatActivity {
                         });
             }
         });
+
+        btn_crearunacuenta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Registro.class);
+                startActivity(intent);
+            }
+        });
     }
-
-
-
 }
